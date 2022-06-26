@@ -1,11 +1,17 @@
 package com.cns.restfulws.user;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class User {
 
     private Integer id;
+
+    @Size(min = 2, message = "Name should be atleast 2 characters long")
     private String name;
+
+    @Past(message = "date of birth should be in past")
     private Date dob;
 
     public User(Integer id, String name, Date dob) {
