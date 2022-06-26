@@ -1,12 +1,16 @@
 package com.cns.restfulws.user;
 
 import com.cns.restfulws.exceptions.CustomNotFoundException;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.sun.jndi.toolkit.url.Uri;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,8 +25,13 @@ public class UserController {
     UserDaoService userDaoService;
 
     @GetMapping(path = "/users")
-    public List<User> getAllUsers() {
-        return userDaoService.findAll();
+    public MappingJacksonValue getAllUsers() {
+        List<User> users = userDaoService.findAll();
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("name", "dob");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("no id", filter);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(users);
+        mappingJacksonValue.setFilters(filters);
+        return mappingJacksonValue;
     }
 
     @GetMapping(path = "/users/{id}")
