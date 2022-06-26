@@ -27,6 +27,11 @@ public class UserController {
         return userDaoService.findOne(id);
     }
 
+    @DeleteMapping(path = "/users/{id}")
+    public List<User> deleteUserById(@PathVariable int id) {
+        return userDaoService.deleteOne(id);
+    }
+
     @PostMapping(path = "/users")
     public ResponseEntity createUser(@RequestBody User user) {
         userDaoService.save(user);

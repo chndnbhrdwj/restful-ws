@@ -34,6 +34,14 @@ public class UserDaoService {
                 .orElseThrow(()->new CustomNotFoundException("id: "+id));
     }
 
+    public List<User> deleteOne(int id) {
+        User user = users.stream()
+                .filter(u -> u.getId() == id).findFirst()
+                .orElseThrow(() -> new CustomNotFoundException("id: " + id));
+        users.remove(user);
+        return users;
+    }
+
     public User save(User user) {
         if (user.getId() == null) {
             user.setId(++userCount);
