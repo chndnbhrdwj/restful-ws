@@ -4,6 +4,8 @@ import com.cns.restfulws.exceptions.CustomNotFoundException;
 import com.sun.jndi.toolkit.url.Uri;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,8 +26,12 @@ public class UserController {
     }
 
     @GetMapping(path = "/users/{id}")
-    public User getUserById(@PathVariable int id) {
-        return userDaoService.findOne(id);
+    public EntityModel<User> getUserById(@PathVariable int id) {
+        User user = userDaoService.findOne(id);
+        EntityModel<User> model = EntityModel.of(user);
+        WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllUsers());
+        model.add(link.withRel("All Users"));
+        return model;
     }
 
     @DeleteMapping(path = "/users/{id}")
