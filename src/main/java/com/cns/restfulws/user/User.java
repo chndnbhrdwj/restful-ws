@@ -3,13 +3,19 @@ package com.cns.restfulws.user;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 @JsonFilter("no id")
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue
     private Integer id;
 
     @Size(min = 2, message = "Name should be atleast 2 characters long")
@@ -17,6 +23,9 @@ public class User {
 
     @Past(message = "date of birth should be in past")
     private Date dob;
+
+    public User() {
+    }
 
     public User(Integer id, String name, Date dob) {
         this.id = id;
